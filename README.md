@@ -185,7 +185,7 @@ int avformat_find_stream_info ( AVFormatContext * ic, AVDictionary ** options )
 파일을 열 때 내부에서 메모리를 할당하기 때문에 이 함수로 반드시 메모리를 해제해야 한다.
 <br>
 <br>
-[예제 코드](https://github.com/JeHeeYu/FFmpeg-Study/blob/main/file_info.cpp)
+[예제 코드](https://github.com/JeHeeYu/FFmpeg-Study/blob/main/Example/file_info.cpp)
 <br>
 
 ![image](https://github.com/JeHeeYu/FFmpeg-Study/assets/87363461/c17f1822-cf4a-49be-b087-8f43eccd36e0)
@@ -231,4 +231,50 @@ streams 배열을 순회하며 codecpar->code_type 멤버를 읽어 보면 오�
 <br>
 단순히 스트림의 정보를 조사하려면 다음 함수를 사용하면 된다.
 ```
+void av_dump_format(AVFormatContext *ic, int index, const char *url, int   is_output)
 ```
+포맷 컨텍스트 핸들과 스트림의 첨자, 파일명을 전달한다.
+<br>
+마지막 인수는 입력용 스트림이면 0, 출력용 스트림이면 1이다.
+<br>
+재생할 때는 스트림에서 정보를 읽으므로 입력용이며 인코딩할 때는 출력용이다.
+<br>
+<br>
+아래 예제는 비디오, 오디오 스트림 정보를 출력하는 예제이다.
+<br>
+[예제 코드](https://github.com/JeHeeYu/FFmpeg-Study/blob/main/Example/streams_info.cpp)
+<br>
+
+![image](https://github.com/JeHeeYu/FFmpeg-Study/assets/87363461/3b09f8bb-4b96-404b-b606-2ea453625898)
+
+<br>
+
+포맷 컨텍스트를 연 후 nb_streams까지 루프를 돌며 각 스트림의 타입을 조사한다.
+<br>
+비디오면 vidx에 첨자를 대입하고, 오디오면 aidx에 첨자를 대입하여 두 스트림을 찾는다.
+<br>
+통상 비디오 0번, 오디오 1번이다.
+<br>
+<br>
+검색한 스트림에 대해 조사하면 아주 복잡한 정보가 출력되는데 비디오만 조사해도 관련 오디오 정보까지 같이 나온다.
+<br>
+비디오 길이는 10.18초, mpeg4 코덱으로 압축, 샛ㄱ상 포맷은 yuv420p, 크기는 640x480이다.
+<br>
+오디오는 mp3 포맷이며 8K 모노이다.
+<br>
+<br>
+한 타입에 대해 여러 개의 스트림이 있는 경우 어떤 스트림이 최적인지 찾아야 한다.
+<br>
+예를 들어 음성이 한국어와 영어 두 개로 녹음되어 있으면 시청자에 따라 맞는 음성을 골라 줘야 한다.
+<br>
+<br>
+이 작업을 직접 하기 귀찮으면 순회할 필요 없이 다음 함수로 최적 스트림을 찾는다.
+```
+int av_find_best_stream(AVFormatContext *ic, enum AVMediaType type, int wanted_stream_nb, int related_stream, AVCodec **decoder_ret, int flags)
+```
+핸들과 스트림 종류, 원하는 스트림 번호, 관련 스트림, 코덱을 돌려 받을 변수 등을 지정한다.
+<br>
+대부분 -1이나 NULL을 지정하면 된다.
+<br>
+<br>
+비디오 스트림을 먼저 찾고 이 스트림과 관련된 오디오 스트림을 찾는다.
