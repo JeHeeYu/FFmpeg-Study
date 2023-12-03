@@ -180,12 +180,6 @@ int avformat_find_stream_info ( AVFormatContext * ic, AVDictionary ** options )
 두 번째 옵션은 미사용 시 NULL을 지정한다.
 <br>
 핸들을 다 사용한 후 다음 함수로 핸들을 닫는다.
-```
-void avformat_close_input(AVFormatContext ** s)
-
-description
-읽은 파일의 메모리를 해제하는 함수
-
-arguments
-s : 해제할 파일 핸들러
-```
+<br>
+<br>
+파일을 열 때 내부에서 메모리를 할당하기 때문에 이 함수로 반드시 메모리를 해제해야 한다.
