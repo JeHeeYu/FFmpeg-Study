@@ -278,3 +278,48 @@ int av_find_best_stream(AVFormatContext *ic, enum AVMediaType type, int wanted_s
 <br>
 <br>
 비디오 스트림을 먼저 찾고 이 스트림과 관련된 오디오 스트림을 찾는다.
+
+<br>
+
+## 스트림 정보
+av_dump_format 함수는 스트림의 일부 주요 정보를 보여 주기만 한다.
+<br>
+동영상을 재생하려면 이 정보를 읽어 참조해야 한다.
+<br>
+<br>
+스트림의 내부를 확인하기 위해 AVStream 구조체를 이용한다.
+<br>
+스트림은 AVStream 구조체로 표현되어 있으며 주요 멤버는 다음과 같다.
+|멤버|설명|
+|:---:|:---|
+|int index|핸들에서의 스트림 순서값|
+|int64_t nb_frames|프레임 개수|
+|AVCodecParameters* codecpar|스트림과 관련된 코덱 파라미터|
+|int64_t start_time|첫 프레임의 재생 시작 시간|
+|int64_t duration|총 재생 시간|
+|AVRational r_frame_rate|최소 프레임레이트 추측치|
+|AVRational avg_frame_rate|평균 프레임레이트|
+|AVRational display_aspecet_ratio|종횡비로, 모를 경우 0|
+|AVRational time_base|스트림에 기록된 타임스탬프 단위|
+
+오디오와 비디오를 구분하지 않고 이 구조체로 모든 정보를 표현한다.
+<br>
+모든 스트림에 공통적으로 해당되는 멤버도 있고 비디오 전용, 오디오 전용 멤버도 있다.
+<br>
+<br>
+예를 들어 종횡비는 비디오에만 적용되며 오디오에는 적용되지 않는다.
+<br>
+이후의 구조체도 스트림 타입별로 구분되어 있지 않고 비디오와 오디오의 정보를 같이 가지는 경우가 많다.
+<br>
+<br>
+AVCodecParameters 타입의 codecpar 멤버는 스트림을 압축하고 해제하는 코덱에 대한 정보를 가진다.
+<br>
+이 구조체에는 스트림에 대한 더 상세한 정보가 저장되어 있다.
+|멤버|설명|
+|:---:|:---|
+|AVMediaType codec_type|스트림의 종류|
+|int width, int height|영상의 폭과 높이이며 픽셀 단위로 비디오 스트림에만 해당|
+|AVCodecID codec_id|코덱의 종류|
+|int format|비디오는 AVPixelFormat 타입의 색상 포맷, 오디오는 AVSampleFormat 타입의 샘플 포맷|
+|int channels|오디오 채널의 개수로 1이면 모노, 2면 스테레오|
+|int sample_rate|오디오의 샘플 레이트|
