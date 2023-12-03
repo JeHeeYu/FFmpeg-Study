@@ -183,3 +183,52 @@ int avformat_find_stream_info ( AVFormatContext * ic, AVDictionary ** options )
 <br>
 <br>
 파일을 열 때 내부에서 메모리를 할당하기 때문에 이 함수로 반드시 메모리를 해제해야 한다.
+<br>
+<br>
+[예제 코드](https://github.com/JeHeeYu/FFmpeg-Study/blob/main/file_info.cpp)
+<br>
+
+![image](https://github.com/JeHeeYu/FFmpeg-Study/assets/87363461/c17f1822-cf4a-49be-b087-8f43eccd36e0)
+
+<br>
+
+비디오, 오디오 2개의 스트림이 있고 총 시간은 10초라는 것을 알 수 있다.
+
+<br>
+
+## 스트림 찾기
+동영상은 파일 포맷이라기보다는 스트림의 집합으로 구성된 컨테이너이다.
+<br>
+스트림은 연속적인 바이트를 시간 순으로 저장해 놓은 것이다.
+<br>
+<br>
+보통은 비디오, 오디오로 구성된 2개의 스트림을 가진다.
+<br>
+
+![image](https://github.com/JeHeeYu/FFmpeg-Study/assets/87363461/46123cee-06cb-4e44-a107-afecceca6a5c)
+
+<br>
+
+비디오 스트림에는 시간 흐름별로 사진이 연속적으로 저장되어 있고 오디오 스트림에는 사운드 샘플이 있다.
+<br>
+그림을 순서대로 보여 주며 사운드를 연주하면 동영상이 재생된다.
+<br>
+<br>
+영화는 각국 언어별로 오디오 스트림 여러 개를 포함하는 경우도 있고 자막이나 그외의 스트림을 가지기도 한다.
+<br>
+스트림이 몇 개나 들어 있는지는 포맷 컨텍스트의 nb_streams 멤버로 조사하며 각 스트림은 streams 멤버에 저장되어 있다.
+<br>
+<br>
+스트림을 읽으려면 먼저 어떤 스트림이 streams 배열의 어디에 들어 있는지 첨자를 찾아야 한다.
+<br>
+통상 0번이 비디오, 1번이 오디오지만 정해진 것은 없다.
+<br>
+<br>
+streams 배열을 순회하며 codecpar->code_type 멤버를 읽어 보면 오디오 스트림인지, 비디오 스트림인지 알 수 있다.
+<br>
+<br>
+스트림에는 여러 가지 복잡한 정보가 들어 있으며 이 정보를 읽어 재생한다.
+<br>
+단순히 스트림의 정보를 조사하려면 다음 함수를 사용하면 된다.
+```
+```
