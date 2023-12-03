@@ -143,3 +143,5 @@ int avformat_open_input(AVFormatContext ** ps, const char * url, ff_const59 AVIn
 성공 시 0을 리턴하며, 실패 시 -1을 리턴한다.
 <br>
 동영상 파일이 없거나 읽을 수 없는 경우 또는 파일을 열지 못할 수도 있다.
+<br>
+<br>
