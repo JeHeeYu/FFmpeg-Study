@@ -145,3 +145,47 @@ int avformat_open_input(AVFormatContext ** ps, const char * url, ff_const59 AVIn
 동영상 파일이 없거나 읽을 수 없는 경우 또는 파일을 열지 못할 수도 있다.
 <br>
 <br>
+동영상의 헤더 정보는 AVFormatContext 구조체로 관리한다.
+<br>
+이 구조체가 동영상 자체를 대표하며 모든 작업 경과를 여기에 저장한다.
+<br>
+파일의 핸들러 같은 존재이다.
+<br>
+<br>
+여기서 컨텍스트는 작업중인 정보라는 뜻이다.
+<br>
+이 안에는 동영상에 관련된 모든 정보가 들어 있다.
+<br>
+<br>
+이 구조체 안에는 멤버가 굉장히 많은데, 당장 알아야 하는 멤버는 아래와 같다.
+|멤버|설명|
+|:---:|:---|
+|char[1024] filename|파일의 경로|
+|AVStream **streams|스트림의 배열|
+|unsigned int nb_streams|동영상에 포함된 스트림의 개수|
+|__int64 duration|재생 시간으로 AV_TIME_BASE 단위|
+|__int64 bit_rate|초당 비트레이트|
+
+스트림의 개수는 헤더에 즉시 조사되지만 스트림 정보나 시간, 비트레이트는 스트림을 열어야 알 수 있다.
+<br>
+streams는 스트림 정보를 담는 포인터의 배열일 뿐 아직 내용은 조사되지 않았다.
+<br>
+<br>
+strems는 다음 함수로 조사한다.
+```
+int avformat_find_stream_info ( AVFormatContext * ic, AVDictionary ** options ) 
+```
+첫 번째 인수가 스트림을 열 파일 핸들, 두 번째 인수는 각 스트림에 적용할 옵션이다.
+<br>
+두 번째 옵션은 미사용 시 NULL을 지정한다.
+<br>
+핸들을 다 사용한 후 다음 함수로 핸들을 닫는다.
+```
+void avformat_close_input(AVFormatContext ** s)
+
+description
+읽은 파일의 메모리를 해제하는 함수
+
+arguments
+s : 해제할 파일 핸들러
+```
