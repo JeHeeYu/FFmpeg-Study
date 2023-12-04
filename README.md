@@ -326,6 +326,7 @@ AVCodecParameters 타입의 codecpar 멤버는 스트림을 압축하고 해제�
 <br>
 아래 예제는 스트림의 주요 정보를 확인하는 예제이다.
 <br>
+
 [예제 코드](https://github.com/JeHeeYu/FFmpeg-Study/blob/main/Example/streams_info2.cpp)
 
 <br>
