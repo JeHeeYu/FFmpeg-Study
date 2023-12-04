@@ -323,3 +323,14 @@ AVCodecParameters 타입의 codecpar 멤버는 스트림을 압축하고 해제�
 |int format|비디오는 AVPixelFormat 타입의 색상 포맷, 오디오는 AVSampleFormat 타입의 샘플 포맷|
 |int channels|오디오 채널의 개수로 1이면 모노, 2면 스테레오|
 |int sample_rate|오디오의 샘플 레이트|
+<br>
+아래 예제는 스트림의 주요 정보를 확인하는 예제이다.
+<br>
+[예제 코드](https://github.com/JeHeeYu/FFmpeg-Study/blob/main/Example/streams_info2.cpp)
+
+<br>
+
+![image](https://github.com/JeHeeYu/FFmpeg-Study/assets/87363461/aa36d7ce-06b8-4535-a54c-7c48f58648c0)
+
+<br>
+
