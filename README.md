@@ -438,3 +438,9 @@ void avcodec_free_context(AVCodecContext **avctx)
 <br>
 <br>
 비디오와 오디오 모두 코덱 관련 변수의 타입과 코덱을 여는 과정은 같다.
+<br>
+<br>
+아래 예제 코드는 코덱 관련 정보를 확인하는 예제이다.
+<br>
+
+[예제 코드](https://github.com/JeHeeYu/FFmpeg-Study/blob/main/Example/codex_info.cpp)
