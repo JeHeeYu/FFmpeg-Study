@@ -444,3 +444,30 @@ void avcodec_free_context(AVCodecContext **avctx)
 <br>
 
 [예제 코드](https://github.com/JeHeeYu/FFmpeg-Study/blob/main/Example/codex_info.cpp)
+
+<br>
+
+## 압축 해제
+스트림은 시간 흐름에 따른 프레임의 연속이다.
+<br>
+초당 30개 정도의 이미지를 빠른 속도로 전호나하여 움직이는 화면으 보여준다.
+<br>
+이때 각 장면을 구성하는 이미지 하나 하나를 프레임이라고 한다.
+<br>
+<br>
+오디오는 장면의 개념은 없지만 시간별로 묶어 놓은 음성 데이터를 프레임이라고 한다.
+<br>
+<br>
+스트림속 원본 프레임은 압축되어 있는 상태이며 그 중 일부를 추출한 데이터를 패킷이라고 한다.
+<br>
+패킷을 순서대로 꺼내 재생하면 동영상이 되지만 패킷 자체는 압축되어 있어 바로 쓸 수 없다.
+<br>
+<br>
+코덱으로 압축을 해제하여 프레임을 얻어야 화면이든 스피커로든 보낼 수 있다.
+<br>
+원본 프레임이 패킷을 거쳐 압축을 푼 프레임이 된다.
+<br>
+
+![image](https://github.com/JeHeeYu/FFmpeg-Study/assets/87363461/71f6dc72-241e-4988-a26b-e6952523a3a1)
+
+<br>
