@@ -530,5 +530,53 @@ int av_read_frame(AVFormatContext *s, AVPacket *pkt)
 <br>
 이 함수가 음수를 리턴할 때까지 루프를 돌면 동영상의 모든 패킷을 순서대로 다 읽게 된다.
 <br>
-
 패킷을 읽은 후 디코더에게 보내 압축 해제를 요청한다.
+<br>
+```
+int avcodec_send_packet(AVCodecContext *avctx, const AVPacket *avpkt)
+```
+코덱은 패킷의 정보를 받아 저장해 두고 일부 정보를 복사하여 디코딩할 준비를 한다.
+<br>
+성공 시 0을 리턴, 실패 시 음수 에러 코드를 리턴한다.
+<br>
+<br>
+다음은 압축을 푼 프레임을 요청하여 받는다.
+```
+int avcodec_receive_frame(AVCodecContext *avctx, AVFrame *frame)
+```
+성공 시 0을 리턴하며 이 안에 압축을 푼 음성과 이미지가 들어 있다.
+<br>
+프레임의 각 멤버를 사용하여 이미지를 화면에 보여 주고 음성을 추출해 재생하면 동영상이 된다.
+<br>
+<br>
+read_frame은 파일에서 원본 프레임을 읽고 send_packet은 디코더에게 압축을 풀으라는 의미, receive_frame은 압축 푼 프레임을 달라는 의미이다.
+<br>
+압축 해제한 프레임으로 이미지와 사운드를 출력한다.
+<br>
+이 과정을 파일 끝까지 반복하면 모든 프레임을 다 읽는 것이다.
+<br>
+
+![image](https://github.com/JeHeeYu/FFmpeg-Study/assets/87363461/2621a9be-ce73-446d-92c2-762a90b7925f)
+
+<br>
+
+FFmpeg의 여러 함수는 패킷과 프레임의 멤버를 작업 대상으로 하며 이 멤버 내의 포인터에 메모리를 할당하거나 작업 중간 결과를 저장한다.
+<br>
+패킷과 프레임을 다 사용했으면 다음 함수로 내부적으로 할당한 멤버를 해제한다.
+```
+void av_packet_unref(AVPacket *pkt)
+void av_frame_unref(AVFrame *frame)
+```
+이 함수는 구조체 내부의 멤버를 청소하는 것일 뿐 구조체 자체를 없애는 것은 아니다.
+<br>
+따라서 구조체 변수 자체는 계속 사용할 수 있다.
+<br>
+<br>
+패킷은 하나를 읽어 사용한 후 av_packet_unref 함수를 반드시 호출하여 메모리를 해제해야 한다.
+<br>
+그렇지 않으면 메모리 누수가 발생한다.
+<br>
+<br>
+반면 프레임의 경우 avcodec_receive_frame 함수가 새 프레임을 읽기 전에 av_frame_unref를 호출하여 깔끔하게 청소 후 읽는다.
+<br>
+따라서 굳이 메모리를 해제할 필요가 없다.
