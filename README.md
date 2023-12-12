@@ -580,3 +580,66 @@ void av_frame_unref(AVFrame *frame)
 반면 프레임의 경우 avcodec_receive_frame 함수가 새 프레임을 읽기 전에 av_frame_unref를 호출하여 깔끔하게 청소 후 읽는다.
 <br>
 따라서 굳이 메모리를 해제할 필요가 없다.
+<br>
+<br>
+아래 예제는 동영상 패킷을 순서대로 읽어 모든 스트림을 보여주는 예제이다.
+<br>
+[예제 코드](https://github.com/JeHeeYu/FFmpeg-Study/blob/main/Example/video_streams.cpp)
+<br>
+<br>
+while 루프에서 av_read_frame 함수로 패킷을 읽는다.
+<br>
+패킷을 읽은 후 스트림 종류에 따라 분기한다.
+<br>
+<br>
+오디안 비디오 압축 해제 과정은 모두 비슷하다.
+<br>
+send로 패킷을 보내고 receive로 해제한 프레임을 받는다.
+<br>
+이 프레임의 정보를 출력하되 첫 번째 프레임에 대해서만 포맷 정보를 출력했다.
+<br>
+그리고 프레임에 저장된 이미지와 샘플링 데이터를 16진수로 덤프한다.
+<br>
+<br>
+한 패킷을 다 사용한 후 메모리를 해제하고 개행한 후 키 입력을 대기한다.
+<br>
+출력 속도가 너무 빨라 _getch 함수로 잠시 대기하며, ESC를 누르면 종료한다.
+<br>
+<br>
+실행 시 비디오와 오디오가 번갈아 가며 출력된다.
+<br>
+오디오의 샘플이 음성이며 비디오의 data 필드에 이미지를 구성하는 픽셀 정보가 들어 있다.
+<br>
+<br>
+이 예제는 패킷 정보 저장을 위해 AVPacket 타입의 packet 구조체 하나만 선언하고 루프에서 계속 사용하고 있다.
+<br>
+unref만 제대로 불러주면 재사용해도 상관 없다.
+<br>
+<br>
+프레임은 오디오와 비디오 각각에 대해 vFrame, aFrame 변수를 선언하고 반복적으로 사용한다.
+<br>
+<br>
+이 예제에서는 간편하게 전역 변수로 선언해서 사용했는데 버퍼를 사용하거나 여러 개의 패킷, 프레임을 유지하려면 동적으로 할당해야 한다.
+<br>
+이때 다음과 같은 함수를 사용한다.
+```
+AVPacket *av_packet_alloc(void)
+AVFrame *av_frame_alloc(void)
+void av_packet_free(AVPacket **pkt)
+void av_frame_free(AVFrame **frame)
+```
+할당 함수는 구조체를 만들고 기본값으로 채운다.
+<br>
+해제 함수는 내부에 동적으로 할당된 정보를 모조리 제거하고 구조체 자체도 해제하며 구조체 포인터에 NULL을 대입하는 조치까지 다 처리한다.
+<br>
+그래서 포인터가 아닌 이중 포인터를 받는다.
+<br>
+구조체 변수가 아닌 포인터만 선언해 놓고 할당해서 사용할 수도 있다.
+```
+AVPacket *packet;
+packet = av_packet_alloc();
+
+packet->멤버;
+
+av_packet_free(&packet);
+```
